@@ -9,8 +9,9 @@ int main (void)
 
 	for (a = num; a > 0; a--)
 	{
-		for (b = num; b >= a; b--)
+		for (b = num; b > 0; b--)
 			{
+				if ()
 				printf("%d", b);
 			}
 		printf("\n");
