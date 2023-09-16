@@ -2,25 +2,17 @@
 
 int main (void)
 {
-	int num, a, b, c = 1;
+	int num, a, b;
 
-	printf("enter you number : ");
+	printf("Enter your number : ");
 	scanf("%d", &num);
 
-	for (a = 1; a = num; a++)
+	for (a = num; a > 0; a--)
 	{
-		for (b = num; b <= num; b--)
-		{
-			if (b > 0)
+		for (b = num; b >= a; b--)
 			{
 				printf("%d", b);
 			}
-			else
-			{
-				break;
-			}
-		}
-		num--;
 		printf("\n");
 	}
 }
