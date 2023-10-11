@@ -1,32 +1,22 @@
-#include"main.h"
-
-int sqrt(int n, int sum);
-
-/**
- * _sqrt_recursion - returns the natural square root
- * @n: number to calculate the square root
- * Return: square root
-*/
-
-int _sqrt_recursion(int n)
-{
-	if (n < 0)
-		return (-1);
-	return (sqrt(n, 0));
-}
+#include "dog.h"
+#include <stdio.h>
+#include <stdlib.h>
 
 /**
- * sqrt - find sqrt root
- * @n: number to calculate the sqaure root of
- * @sum: iterator
- * Return: square root
+ * print_dog - Write a function that prints a struct dog
+ * @d: pointer
 */
 
-int sqrt(int n, int sum)
+void print_dog(struct dog *d)
 {
-	if (sum * sum > n)
-		return (-1);
-	if (sum * sum == n)
-		return (sum);
-	return (sqrt(n, sum + 1));
+	if (d == NULL)
+		return;
+	if (d->name == NULL)
+		d->name = "(nil)";
+	if (d->owner == NULL)
+		d->owner = "(nil)";
+
+	printf("Name: %s\n", d->name);
+	printf("Age: %f\n", d->age);
+	printf("Owner: %s\n", d->owner);
 }
