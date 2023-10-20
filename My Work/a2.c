@@ -1,22 +1,18 @@
-#include "dog.h"
-#include <stdio.h>
-#include <stdlib.h>
+#include "lists.h"
 
 /**
- * print_dog - Write a function that prints a struct dog
- * @d: pointer
-*/
-
-void print_dog(struct dog *d)
+ * list_len - calculates the sum of elements in a linked list of integers
+ * @h: pointer to the first node in the list
+ * Return: the sum of elements in the list
+ */
+size_t list_len(const list_t *h)
 {
-	if (d == NULL)
-		return;
-	if (d->name == NULL)
-		d->name = "(nil)";
-	if (d->owner == NULL)
-		d->owner = "(nil)";
+	int sum = 0;
 
-	printf("Name: %s\n", d->name);
-	printf("Age: %f\n", d->age);
-	printf("Owner: %s\n", d->owner);
+	while (h)
+	{
+		sum++;
+		h = h->next;
+	}
+	return (sum);
 }

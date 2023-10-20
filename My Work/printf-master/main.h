@@ -10,6 +10,7 @@
 #include <unistd.h>
 #include <limits.h>
 
+
 #define UNUSED(i) (void)(i)
 
 #define BUFFER_SIZE 1024
@@ -36,21 +37,24 @@
  * @reserved: Reserved field for alignment (to ensure a 4-byte size)
 */
 typedef struct par {
-    unsigned int unsign       : 1;
-    unsigned int plus_flag    : 1;
-    unsigned int space_flag   : 1;
-    unsigned int hashtag_flag : 1;
-    unsigned int zero_flag    : 1;
-    unsigned int minus_flag   : 1;
-    unsigned int h_modifier   : 1;
-    unsigned int l_modifier   : 1;
-    unsigned int percision;
-    unsigned int width;
-    unsigned int reserved;
+	unsigned int unsign				: 1;
+
+	unsigned int plus_flag			: 1;
+	unsigned int space_flag			: 1;
+	unsigned int hashtag_flag		: 1;
+	unsigned int zero_flag			: 1;
+	unsigned int minus_flag			: 1;
+
+	unsigned int width;
+	unsigned int percision;
+	unsigned int reserved;
+
+	unsigned int h_modifier			: 1;
+	unsigned int l_modifier			: 1;
 } par_t;
 
 /**
- * struct fmt - Struct op
+ * struct spec - Struct op
  * @spec: format.
  * @f: function associated.
  */
@@ -84,7 +88,7 @@ int (*get_speci(char *s))(va_list ap, par_t *par);
 int get_print_fun(char *s, va_list ap, par_t *par);
 int get_modif(char *s, par_t *par);
 int get_flag(char *s, par_t *par);
-int *get_width(char *s, par_t *par, va_list ap);
+char *get_width(char *s, par_t *par, va_list ap);
 
 /*number*/
 char *convert(long int num, int base, int flag, par_t *par);
@@ -109,5 +113,8 @@ void init_par(par_t *par, va_list ap);
 
 /*string.c*/
 char *get_perci(char *p, par_t *par, va_list ap);
- 
-#endif /* MAIN_H */
+
+/*print_unknown*/
+int print_unknown(va_list ap, par_t *par);
+
+#endif

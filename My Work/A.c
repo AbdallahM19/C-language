@@ -1,20 +1,23 @@
-#include "dog.h"
+#include "lists.h"
 
 /**
- * init_dog - Write a function that initialize a variable of type struct dog
- * @d: pointer
- * @name: name, type = char *
- * @age: age, type = float
- * @owner: owner, type = char *
- * Return: 0
+ * print_list - Write a function that prints
+ * all the elements of a list_t list.
+ * @h: pointer
+ * Return: size of len
 */
-
-void init_dog(struct dog *d, char *name, float age, char *owner)
+size_t print_list(const list_t *h)
 {
-	if (d)
+	size_t a = 0;
+
+	while (h)
 	{
-		d->name = name;
-		d->age = age;
-		d->owner = owner;
+		if (!h->str)
+			printf("[0] (nil)\n");
+		else
+			printf("[%d] %s\n", h->len, h->str);
+		h = h->next;
+		a++;
 	}
+	return (a);
 }
