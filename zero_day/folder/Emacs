@@ -1,0 +1,9 @@
+mkdir 0-02 emacd
+C-x C-f
+C-x C-s
+C-w
+C-y
+C-s
+C-x u
+C-x C-c
+C-g to cancel command

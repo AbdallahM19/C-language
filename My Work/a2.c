@@ -1,18 +1,21 @@
-#include "lists.h"
+#include <stdio.h>
+#include <string.h>
 
-/**
- * list_len - calculates the sum of elements in a linked list of integers
- * @h: pointer to the first node in the list
- * Return: the sum of elements in the list
- */
-size_t list_len(const list_t *h)
-{
-	int sum = 0;
+void splitString(const char* str) {
+    char* token;
+    char copy[strlen(str) + 1];
+    strcpy(copy, str);
 
-	while (h)
-	{
-		sum++;
-		h = h->next;
-	}
-	return (sum);
+    token = strtok(copy, " "); // Split by space
+
+    while (token != NULL) {
+        printf("%s\n", token);
+        token = strtok(NULL, " ");
+    }
+}
+
+int main() {
+    const char* input = "Write a function that splits a string";
+    splitString(input);
+    return 0;
 }

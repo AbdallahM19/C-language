@@ -1,23 +1,19 @@
-#include "lists.h"
+#include <stdio.h>
 
 /**
- * print_list - Write a function that prints
- * all the elements of a list_t list.
- * @h: pointer
- * Return: size of len
-*/
-size_t print_list(const list_t *h)
+ * main - prints the environment
+ *
+ * Return: Always 0.
+ */
+int main(int ac, char **av, char **env)
 {
-	size_t a = 0;
+	unsigned int i;
 
-	while (h)
+	i = 0;
+	while (env[i] != NULL)
 	{
-		if (!h->str)
-			printf("[0] (nil)\n");
-		else
-			printf("[%d] %s\n", h->len, h->str);
-		h = h->next;
-		a++;
+		printf("%s\n", env[i]);
+		i++;
 	}
-	return (a);
+	return (0);
 }
