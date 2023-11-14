@@ -1,25 +1,30 @@
-#include "main.h"
+#include <stdio.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/types.h>
+#include <stdarg.h>
+#include <stdlib.h>
 
-/**
- *init_par - function clears struct fields and reset buf
- *@par: the parameter of struct
- *@ap: the argument pointer
- *Return: void
- */
-
-void init_par(par_t *par, va_list ap)
+int main()
 {
-	par->unsign = 0;
-	par->plus_flag = 0;
-	par->space_flag = 0;
-	par->hashtag_flag = 0;
-	par->zero_flag = 0;
-	par->minus_flag = 0;
+    pid_t pid;
+    char *argv[] = {"/bin/ls", "-la"};
 
-	par->width = 0;
-	par->percision = UINT_MAX;
+    pid = fork();
 
-	par->h_modifier = 0;
-	par->l_modifier = 0;
-	(void)ap;
+    if (pid == -1)
+    {
+        return -1;
+    }
+    else if (pid == 0)
+    {
+        execve(argv[0], argv, NULL);
+    }
+    else
+    {
+        wait(NULL);
+    }
+    return 0;
 }

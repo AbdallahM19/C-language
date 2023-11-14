@@ -1,91 +1,121 @@
-#include "main.h"
-
-#define BUF_SIZE 1024
-
-/**
- * print_error - print to STDERR_FILENO
- * @message: message to print
- */
-void print_error(const char *message)
+void execute_command(char *command, int interactive)
 {
-	dprintf(STDERR_FILENO, "%s\n", message);
-}
+	pid_t pid;
+	char *args[READ_BUF_SIZE];
+	int i = 0;
 
-/**
- * copy_file - copy the content of one file to another
- * @file_from: source file descriptor
- * @file_to: destination file descriptor
- * @name_from: source file name
- * @name_to: destination file name
- * Return: 0 on success, exit codes on failure
- */
-int copy_file(int file_from, int file_to,
-const char *name_from, const char *name_to)
-{
-	ssize_t bytes_read, bytes_written;
-	char buffer[BUF_SIZE];
-
-	while ((bytes_read = read(file_from, buffer, BUF_SIZE)) > 0)
+	char *token = strtok_custom(command, " \n");
+	while (token != NULL && i < READ_BUF_SIZE - 1)
 	{
-		bytes_written = write(file_to, buffer, bytes_read);
-		if (bytes_written == -1)
+		args[i++] = token;
+		token = strtok_custom(NULL, " \n");
+	}
+	args[i] = NULL;
+
+	if (args[0] == NULL)
+	{
+		return;
+	}
+
+	int pipe_found = 0;
+
+	if (_strcmp(args[0], "exit") == 0)
+	{
+		if (interactive)
+			exit(EXIT_SUCCESS);
+	}
+
+	if (_strcmp(args[0], "cd") == 0)
+	{
+		if (args[1] == NULL)
 		{
-			print_error("Error: Can't write to file");
-			return (99);
+			fprintf(stderr, "cd: missing argument\n");
+			return;
+		}
+		if (chdir(args[1]) != 0)
+		{
+			perror("chdir");
+		}
+
+		return;
+	}
+
+	if (_strcmp(args[0], "pwd") == 0)
+	{
+		char cwd[READ_BUF_SIZE];
+		if (getcwd(cwd, sizeof(cwd)) != NULL)
+		{
+			printf("%s\n", cwd);
+		}
+		else
+		{
+			perror("getcwd");
+		}
+		return;
+	}
+
+	for (i = 0; args[i] != NULL; ++i)
+	{
+		if (strcmp(args[i], "|") == 0)
+		{
+			args[i] = NULL;
+			pipe_found = 1;
+			break;
 		}
 	}
-	if (bytes_read == -1)
-	{
-		print_error("Error: Can't read from file");
-		return (98);
-	}
-	if (close(file_from) == -1)
-	{
-		print_error("Error: Can't close file descriptor");
-		return (100);
-	}
-	if (close(file_to) == -1)
-	{
-		print_error("Error: Can't close file descriptor");
-		return (100);
-	}
-	return (0);
-}
 
-/**
- * main - Entry point, copies the content of one file to another
- * @ac: Argument count
- * @av: Argument vector
- * Return: 0 on success, exit codes as specified in the prompt on failure
- */
-int main(int ac, char *av[])
-{
-	int from_fd, to_fd;
-	struct stat st;
+	pid = fork();
+	if (pid < 0)
+	{
+		perror("fork");
+		exit(EXIT_FAILURE);
+	}
+	else if (pid == 0)
+	{
+		if (pipe_found)
+		{
+			int pipe_fd[2];
+			if (pipe(pipe_fd) == -1)
+			{
+				perror("pipe");
+				exit(EXIT_FAILURE);
+			}
 
-	if (ac != 3)
-	{
-		print_error("Usage: cp file_from file_to");
-		return (97);
-	}
-	from_fd = open(av[1], O_RDONLY);
-	if (from_fd == -1)
-	{
-		print_error("Error: Can't read from file");
-		return (98);
-	}
-	if (fstat(from_fd, &st) == -1)
-	{
-		print_error("Error: Can't get file status");
-		return (98);
-	}
-	to_fd = open(av[2], O_WRONLY | O_CREAT | O_TRUNC, st.st_mode);
-	if (to_fd == -1)
-	{
-		print_error("Error: Can't write to file");
-		return (99);
-	}
-	int result = copy_file(from_fd, to_fd, av[1], av[2]);
+			pid_t child_pid;
+			child_pid = fork();
+			if (child_pid == -1)
+			{
+				perror("fork");
+				exit(EXIT_FAILURE);
+			}
+			else if (child_pid == 0)
+			{
+				close(pipe_fd[0]);
+				dup2(pipe_fd[1], STDOUT_FILENO);
+				close(pipe_fd[1]);
 
-	return (result);
+				execvp(args[0], args);
+				perror("execvp");
+				exit(EXIT_FAILURE);
+			}
+			else
+			{
+				close(pipe_fd[1]);
+				waitpid(child_pid, NULL, 0);
+				exit(EXIT_SUCCESS);
+			}
+		}
+		else
+		{
+			execvp(args[0], args);
+			perror("execvp");
+			exit(EXIT_FAILURE);
+		}
+	}
+	else
+	{
+		int status;
+		if (interactive)
+			waitpid(pid, &status, 0);
+	}
 }
