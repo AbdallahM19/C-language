@@ -1,43 +1,56 @@
 #include "monty.h"
 
-stack_t *stack;
-
-void push(stack_t **stack, int value, unsigned int line_number)
+/**
+ * push - Pushes a value onto the stack.
+ * @stack: Double pointer to the stack.
+ * @line_number: Line number of the opcode.
+ */
+void push(stack_t **stack, unsigned int line_number)
 {
-	stack_t *new_node = malloc(sizeof(stack_t));
+	stack_t *temp;
 
-	if (new_node == NULL)
-	{
-		fprintf(stderr, "Error: malloc failed\n");
+	(void) line_number;
+	if (stack == NULL || *stack == NULL)
 		exit(EXIT_FAILURE);
-	}
-	new_node->n = value;
-	new_node->prev = NULL;
-	new_node->next = *stack;
-	if (*stack != NULL)
+	if (head == NULL)
 	{
-		(*stack)->prev = new_node;
+		head = *stack;
+		return;
 	}
-	*stack = new_node;
+	temp = head;
+	head = *stack;
+	head->next = temp;
+	temp->prev = head;
 }
 
+/**
+ * pall - Prints all values in the stack.
+ * @stack: Double pointer to the stack.
+ * @line_number: Line number of the opcode.
+ */
 void pall(stack_t **stack, unsigned int line_number)
 {
-	stack_t *current = *stack;
+	stack_t *temp;
 
-	while (current != NULL)
+	(void) line_number;
+	if (stack == NULL)
+		exit(EXIT_FAILURE);
+	temp = *stack;
+	while (temp != NULL)
 	{
-		printf("%d\n", current->n);
-		current = current->next;
+		printf("%d\n", temp->n);
+		temp = temp->next;
 	}
 }
 
+/**
+ * pint - Prints the value at the top of the stack.
+ * @stack: Double pointer to the stack.
+ * @line_number: Line number of the opcode.
+ */
 void pint(stack_t **stack, unsigned int line_number)
 {
-	if (*stack == NULL)
-	{
-		fprintf(stderr, "L%d: can't pint, stack empty\n", line_number);
-		exit(EXIT_FAILURE);
-	}
+	if (stack == NULL || *stack == NULL)
+		more_err(6, line_number);
 	printf("%d\n", (*stack)->n);
 }
