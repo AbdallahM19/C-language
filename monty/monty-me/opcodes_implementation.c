@@ -1,24 +1,6 @@
 #include "monty.h"
 
 /**
- * pop - Removes the top element of the stack.
- * @stack: Double pointer to the stack.
- * @line_number: Line number of the opcode.
- */
-void pop(stack_t **stack, unsigned int line_number)
-{
-	stack_t *temp;
-
-	if (stack == NULL || *stack == NULL)
-		more_err(7, line_number);
-	temp = *stack;
-	*stack = temp->next;
-	if (*stack != NULL)
-		(*stack)->prev = NULL;
-	free(temp);
-}
-
-/**
  * swap - Swaps the top two elements of the stack.
  * @stack: Double pointer to the stack.
  * @line_number: Line number of the opcode.
@@ -37,17 +19,6 @@ void swap(stack_t **stack, unsigned int line_number)
 	(*stack)->prev = temp;
 	temp->prev = NULL;
 	*stack = temp;
-}
-
-/**
- * nop - No operation; does nothing.
- * @stack: Double pointer to the stack.
- * @line_number: Line number of the opcode.
- */
-void nop(stack_t **stack, unsigned int line_number)
-{
-	(void)stack;
-	(void)line_number;
 }
 
 /**
