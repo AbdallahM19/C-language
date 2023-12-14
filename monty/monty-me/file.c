@@ -20,13 +20,16 @@ void open_file(char *file_name)
  */
 void read_file(FILE *fd)
 {
-	int line_number, format = 0;
-	char *buffer = NULL;
-	size_t len = 0;
+	int line_number = 1, format = 0;
+	char *buff = NULL;
+	size_t i = 0;
 
-	for (line_number = 1; getline(&buffer, &len, fd) != -1; line_number++)
-		format = parse_line(buffer, line_number, format);
-	free(buffer);
+	while (getline(&buff, &i, fd) != -1)
+	{
+		format = parse_line(buff, line_number, format);
+		line_number++;
+	}
+	free(buff);
 }
 
 
@@ -39,23 +42,20 @@ void read_file(FILE *fd)
  */
 int parse_line(char *buffer, int line_number, int format)
 {
-	char *opcode, *value;
-	const char *delim = "\n ";
+	char *op_code, *value;
+	const char *delimiter = "\n ";
 
 	if (buffer == NULL)
 		err(4);
-
-	opcode = strtok(buffer, delim);
-	if (opcode == NULL)
+	op_code = strtok(buffer, delimiter);
+	if (op_code == NULL)
 		return (format);
-	value = strtok(NULL, delim);
-
-	if (strcmp(opcode, "stack") == 0)
+	value = strtok(NULL, delimiter);
+	if (strcmp(op_code, "stack") == 0)
 		return (0);
-	if (strcmp(opcode, "queue") == 0)
+	if (strcmp(op_code, "queue") == 0)
 		return (1);
-
-	find_func(opcode, value, line_number, format);
+	find_func(op_code, value, line_number, format);
 	return (format);
 }
 
@@ -63,10 +63,10 @@ int parse_line(char *buffer, int line_number, int format)
  * find_func - Finds and calls the appropriate function based on the opcode.
  * @opcode: Opcode.
  * @value: Value associated with the opcode.
- * @ln: Line number of the opcode.
+ * @line_number: Line number of the opcode.
  * @format: Format flag (0 for stack, 1 for queue).
  */
-void find_func(char *opcode, char *value, int ln, int format)
+void find_func(char *op_code, char *value, int line_number, int format)
 {
 	int i;
 	int flag;
@@ -90,19 +90,19 @@ void find_func(char *opcode, char *value, int ln, int format)
 		{NULL, NULL}
 	};
 
-	if (opcode[0] == '#')
+	if (op_code[0] == '#')
 		return;
 
 	for (flag = 1, i = 0; func_list[i].opcode != NULL; i++)
 	{
-		if (strcmp(opcode, func_list[i].opcode) == 0)
+		if (strcmp(op_code, func_list[i].opcode) == 0)
 		{
-			call_fun(func_list[i].f, opcode, value, ln, format);
+			call_fun(func_list[i].f, op_code, value, line_number, format);
 			flag = 0;
 		}
 	}
 	if (flag == 1)
-		err(3, ln, opcode);
+		err(3, line_number, op_code);
 }
 
 /**
@@ -110,10 +110,10 @@ void find_func(char *opcode, char *value, int ln, int format)
  * @func: Function pointer to the opcode function.
  * @op: Opcode.
  * @val: Value associated with the opcode.
- * @ln: Line number of the opcode.
+ * @line_number: Line number of the opcode.
  * @format: Format flag (0 for stack, 1 for queue).
  */
-void call_fun(op_func func, char *op, char *val, int ln, int format)
+void call_fun(op_func func, char *op, char *val, int line_number, int format)
 {
 	stack_t *node;
 	int flag;
@@ -128,18 +128,18 @@ void call_fun(op_func func, char *op, char *val, int ln, int format)
 			flag = -1;
 		}
 		if (val == NULL)
-			err(5, ln);
+			err(5, line_number);
 		for (i = 0; val[i] != '\0'; i++)
 		{
 			if (isdigit(val[i]) == 0)
-				err(5, ln);
+				err(5, line_number);
 		}
 		node = create_node(atoi(val) * flag);
 		if (format == 0)
-			func(&node, ln);
+			func(&node, line_number);
 		if (format == 1)
-			add_to_queue(&node, ln);
+			add_queue(&node, line_number);
 	}
 	else
-		func(&head, ln);
+		func(&head, line_number);
 }

@@ -11,7 +11,6 @@ void pop(stack_t **stack, unsigned int line_number)
 
 	if (stack == NULL || *stack == NULL)
 		more_err(7, line_number);
-
 	temp = *stack;
 	*stack = temp->next;
 	if (*stack != NULL)
@@ -62,7 +61,6 @@ void pchar(stack_t **stack, unsigned int line_number)
 
 	if (stack == NULL || *stack == NULL)
 		string_err(11, line_number);
-
 	ascii = (*stack)->n;
 	if (ascii < 0 || ascii > 127)
 		string_err(10, line_number);
@@ -79,6 +77,7 @@ void pstr(stack_t **stack, unsigned int line_number)
 	int ascii;
 	stack_t *temp;
 
+	(void) line_number;
 	if (stack == NULL || *stack == NULL)
 	{
 		printf("\n");

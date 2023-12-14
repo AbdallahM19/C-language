@@ -41,43 +41,43 @@ extern stack_t *head;
 typedef void (*op_func)(stack_t **, unsigned int);
 
 /* file.c */
-void open_file(char *file_name);
-void read_file(FILE *fd);
-int parse_line(char *buffer, int line_number, int format);
-void find_func(char *opcode, char *value, int ln, int format);
-void call_fun(op_func func, char *op, char *val, int ln, int format);
+void open_file(char *);
+void read_file(FILE *);
+int parse_line(char *, int , int);
+void find_func(char *, char *, int , int);
+void call_fun(op_func , char *, char *, int , int);
 
 /* errors.c */
-void err(int error_code, ...);
-void more_err(int error_code, ...);
-void string_err(int error_code, ...);
+void err(int , ...);
+void more_err(int , ...);
+void string_err(int , ...);
 
 /* main.c */
-stack_t *create_node(int n);
+stack_t *create_node(int);
 void free_nodes(void);
-void add_to_queue(stack_t **new_node, __attribute__((unused))unsigned int ln);
+void add_queue(stack_t **, unsigned int);
 
 /* opcodes_implementation_1.c */
-void add(stack_t **stack, unsigned int line_number);
-void sub(stack_t **stack, unsigned int line_number);
-void div(stack_t **stack, unsigned int line_number);
-void mul(stack_t **stack, unsigned int line_number);
-void mod(stack_t **stack, unsigned int line_number);
+void add(stack_t **, unsigned int);
+void sub(stack_t **, unsigned int);
+void div(stack_t **, unsigned int);
+void mul(stack_t **, unsigned int);
+void mod(stack_t **, unsigned int);
 
 /* opcodes_implementation.c */
-void pop(stack_t **stack, unsigned int line_number);
-void swap(stack_t **stack, unsigned int line_number);
-void nop(stack_t **stack, unsigned int line_number);
-void pchar(stack_t **stack, unsigned int line_number);
-void pstr(stack_t **stack, unsigned int line_number);
+  void pop(stack_t **, unsigned int);
+ void swap(stack_t **, unsigned int);
+  void nop(stack_t **, unsigned int);
+void pchar(stack_t **, unsigned int);
+ void pstr(stack_t **, unsigned int);
 
 /* push.c */
-void push(stack_t **stack, unsigned int line_number);
-void pall(stack_t **stack, unsigned int line_number);
-void pint(stack_t **stack, unsigned int line_number);
+void push(stack_t **, unsigned int);
+void pall(stack_t **, unsigned int);
+void pint(stack_t **, unsigned int);
 
 /* rot.c */
-void rotl(stack_t **stack, unsigned int line_number);
-void rotr(stack_t **stack, unsigned int line_number);
+void rotl(stack_t **, unsigned int);
+void rotr(stack_t **, unsigned int);
 
 #endif

@@ -9,7 +9,7 @@ void err(int error_code, ...)
 {
 	va_list ag;
 	char *op;
-	int l_num;
+	int line_number;
 
 	va_start(ag, error_code);
 	switch (error_code)
@@ -22,9 +22,9 @@ void err(int error_code, ...)
 				va_arg(ag, char *));
 			break;
 		case 3:
-			l_num = va_arg(ag, int);
+			line_number = va_arg(ag, int);
 			op = va_arg(ag, char *);
-			fprintf(stderr, "L%d: unknown instruction %s\n", l_num, op);
+			fprintf(stderr, "L%d: unknown instruction %s\n", line_number, op);
 			break;
 		case 4:
 			fprintf(stderr, "Error: malloc failed\n");

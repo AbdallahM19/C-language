@@ -43,41 +43,39 @@ stack_t *create_node(int n)
  */
 void free_nodes(void)
 {
-	stack_t *tmp;
+	stack_t *temp;
 
 	if (head == NULL)
 		return;
-
 	while (head != NULL)
 	{
-		tmp = head;
+		temp = head;
 		head = head->next;
-		free(tmp);
+		free(temp);
 	}
 }
 
 
 /**
- * add_to_queue - Adds a node to the queue.
+ * add_queue - Adds a node to the queue.
  * @new_node: Pointer to the new node.
- * @ln: Interger representing the line number of of the opcode.
+ * @line_number: Interger representing the line number of of the opcode.
  */
-void add_to_queue(stack_t **new_node, __attribute__((unused))unsigned int ln)
+void add_queue(stack_t **stack, unsigned int line_number)
 {
-	stack_t *tmp;
+	stack_t *temp;
 
-	if (new_node == NULL || *new_node == NULL)
+	(void) line_number;
+	if (stack == NULL || *stack == NULL)
 		exit(EXIT_FAILURE);
 	if (head == NULL)
 	{
-		head = *new_node;
+		head = *stack;
 		return;
 	}
-	tmp = head;
-	while (tmp->next != NULL)
-		tmp = tmp->next;
-
-	tmp->next = *new_node;
-	(*new_node)->prev = tmp;
-
+	temp = head;
+	while (temp->next != NULL)
+		temp = temp->next;
+	temp->next = *stack;
+	(*stack)->prev = temp;
 }
